@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bingo Amse Estación Limay</title>
+  <style>
+    body {
+      text-align: center;
+      transition: background-color 5s;
+    }
+
+    h1 {
+      font-size: 52px;
+      margin-top: 30px;
+    }
+    h2 {
+      color: #728FCE;
+      font-size: 40px;
+      margin-top: 70px;
+    }
+
+
+    .title-color-1 { color: #FF0000; } /* Red */
+    .title-color-2 { color: #00FF00; } /* Green */
+    .title-color-3 { color: #0000FF; } /* Blue */
+    .title-color-4 { color: #FF00FF; } /* Magenta */
+    .title-color-5 { color: #FFFF00; } /* Yellow */
+    .title-color-6 { color: #00FFFF; } /* Cyan */
+
+    #bingo-grid {
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    #number-input {
+      margin-top: 30px;
+    }
+
+    #confirm-button,
+    #reset-button,
+    #bingo-button {
+      margin-top: 10px;
+    }
+
+    .number-cell {
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid black;
+      display: inline-block;
+      margin: 2px;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .red {
+      background-color: red;
+    }
+    .img_deg
+    {
+    float: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    <span class="title-color-1">B</span>
+    <span class="title-color-2">I</span>
+    <span class="title-color-3">N</span>
+    <span class="title-color-4">G</span>
+    <span class="title-color-5">O</span>
+
+  </h1>
+
+  <div id="bingo-grid">
+    <!-- Generate number cells from 0 to 99 -->
+    <script>
+      for (var i = 0; i <= 99; i++) {
+        document.write('<div class="number-cell">' + i + '</div>');
+      }
+    </script>
+  </div>
+
+  <input type="number" id="number-input" placeholder="Ingresá un número">
+  <button id="confirm-button">Confirmar</button>
+  <button id="delete-button">Borrar</button>
+  <button id="bingo-button">Bingo</button>
+  <button id="reset-button">Resetear</button>
+  <audio id="number-sound" src="number.mp3"></audio>
+  <audio id="bingo-sound" src="bingo.mp3"></audio>
+  <audio id="reset-sound" src="reiniciar.mp3"></audio>  
+  <audio id="delete-sound" src="borrar.mp3"></audio>
+
+ <div  >
+   <div id="A" style="display: inline-block">
+        <img src=logo.png> 
+   </div>
+   <div id="B" style="display: inline-block">
+      <div>
+         <h2>AMSE Estación Limay</h2>
+      </div>
+   </div>
+</div>
+  <script>
+    var numberInput = document.getElementById('number-input');
+    var bingoGrid = document.getElementById('bingo-grid');
+    var confirmButton = document.getElementById('confirm-button');
+    var deleteButton = document.getElementById('delete-button');
+    var resetButton = document.getElementById('reset-button');
+    var bingoButton = document.getElementById('bingo-button');
+    var numberSound = document.getElementById('number-sound');
+    var bingoSound = document.getElementById('bingo-sound');
+    var resetSound = document.getElementById('reset-sound');
+    var deleteSound = document.getElementById('delete-sound');
+
+    window.onload = function() {
+        numberInput.focus();
+    }
+   
+    numberInput.addEventListener('keyup', function(event) {
+      var inputNumber = parseInt(numberInput.value);
+      if (event.keyCode === 13 && !isNaN(inputNumber) && inputNumber >= 0 && inputNumber <= 99) {
+        var numberCells = bingoGrid.getElementsByClassName('number-cell');
+        numberSound.play();
+        for (var i = 0; i < numberCells.length; i++) {
+          if (parseInt(numberCells[i].textContent) === inputNumber) {
+            numberCells[i].classList.add('red', 'bold');
+          }
+        }
+        numberInput.value = '';
+      }
+      numberInput.focus();
+    });
+
+    confirmButton.addEventListener('click', function() {
+      var inputNumber = parseInt(numberInput.value);
+      if (!isNaN(inputNumber) && inputNumber >= 0 && inputNumber <= 99) {
+        var numberCells = bingoGrid.getElementsByClassName('number-cell');
+        numberSound.play();
+        for (var i = 0; i < numberCells.length; i++) {
+          if (parseInt(numberCells[i].textContent) === inputNumber) {
+            numberCells[i].classList.add('red', 'bold');
+          }
+        }
+      }
+      numberInput.value = '';
+      numberInput.focus();
+    });
+
+    deleteButton.addEventListener('click', function() {
+      var inputNumber = parseInt(numberInput.value);
+      if (!isNaN(inputNumber) && inputNumber >= 0 && inputNumber <= 99) {
+        var numberCells = bingoGrid.getElementsByClassName('number-cell');
+        deleteSound.play();
+        for (var i = 0; i < numberCells.length; i++) {
+          if (parseInt(numberCells[i].textContent) === inputNumber) {
+            numberCells[i].classList.remove('red', 'bold');
+          }
+        }
+      }
+      numberInput.value = '';
+      numberInput.focus();
+    });
+
+    resetButton.addEventListener('click', function() {
+      var numberCells = bingoGrid.getElementsByClassName('number-cell');
+      resetSound.play();
+      for (var i = 0; i < numberCells.length; i++) {
+        numberCells[i].classList.remove('red', 'bold');
+      }
+      numberInput.value = '';
+    });
+
+    bingoButton.addEventListener('click', function() {
+      var numberCells = bingoGrid.getElementsByClassName('number-cell');
+      bingoSound.play();
+      for (var i = 0; i < numberCells.length; i++) {
+        numberCells[i].style.color = getRandomColor();
+      }
+      document.body.style.backgroundColor = getRandomColor();
+      setTimeout(function() {
+        document.body.style.backgroundColor = '';
+        for (var i = 0; i < numberCells.length; i++) {
+          numberCells[i].style.color = '';
+        }
+      }, 5000);
+    });
+
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>
